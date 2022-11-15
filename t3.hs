@@ -47,15 +47,7 @@ inicializa :: [String] -> EstadoJogo
 inicializa lab = EstadoJogo {labirinto = lab, posicao = posIni lab, chavesAdq = ""}
 
 posIni :: [String] -> (Int,Int)
-posIni xs = posicaoInicial xs (length xs - 2)
-
-
-posicaoInicial :: [String] -> Int -> (Int, Int)
-posicaoInicial xs x
-            |'S' `elem` (xs!!x) = (x, auxil (xs!!x) 'S')
-            
-auxil :: [Char] -> Char -> Int
-auxil ys t = fst(head(filter(\(_,b) -> b == t) (zip [0..] ys)))
+posIni xs = undefined
 
 
 
