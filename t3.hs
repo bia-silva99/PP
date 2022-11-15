@@ -1,5 +1,5 @@
 module Labirintos (
-    EstadoJogo,
+    EstadoJogo(..),
     inicializa,
     jogador,
     chaves,
@@ -18,7 +18,7 @@ chegar da posição inicial à posição final.
 Deverá ser possível obter informação de um objeto do tipo EstadoJogo 
 das seguintes Formas:
 -}
-newtype EstadoJogo = Lab [[Char]] deriving (Show)
+newtype EstadoJogo = EstadoJogo [[Char]] deriving (Show)
 
 --Bia 
 inicializa :: [String] -> EstadoJogo
