@@ -44,10 +44,10 @@ labirinto (no estado inicial, o jogador encontra-se na posição inicial,
 sem ter adquirido nenhuma chave).
 -}
 inicializa :: [String] -> EstadoJogo
-inicializa lab = EstadoJogo {labirinto = lab, posicao = posIni lab, chavesAdq = ""}
+inicializa lab = EstadoJogo {labirinto = lab, posicao = posicaoInicial lab, chavesAdq = ""}
 
-posIni :: [String] -> (Int,Int)
-posIni xs = undefined
+posicaoInicial :: [String] -> (Int,Int)
+posicaoInicial xs = undefined
 
 
 
