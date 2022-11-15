@@ -35,6 +35,10 @@ inicializa lab = EstadoJogo {labirinto = lab, posicao = posicaoInicial lab, chav
 posicaoInicial :: [String] -> (Int, Int)
 posicaoInicial xs = undefined
 
+posicaoFinal :: [String] -> (Int, Int)
+posicaoFinal xs = undefined
+
+
 --Barrocas -done
 {-recebe um estado de um jogo e devolve a posição atual do jogador.-}
 jogador :: EstadoJogo -> (Int,Int)
@@ -46,11 +50,21 @@ pelo jogador. Cada chave é representada por um dos caracteres 'a','b','c'.-}
 chaves :: EstadoJogo -> String
 chaves = chavesAdq
 
---Barrocas -TODO
+lab :: EstadoJogo -> [String]
+lab = labirinto
+
+--Barrocas -done
 {-recebe um estado de um jogo e indica se o jogador já atingiu a 
 posição final.-}
 terminado :: EstadoJogo -> Bool
-terminado ej = undefined
+terminado ej  | auxil2 (lab ej) (jogador ej) == 'F' = True
+              | auxil2 (lab ej) (jogador ej) /= 'F' = False
+
+
+--toma um par de coordenadas e devolve o valor no tabuleiro
+auxil2 :: [String] -> (Int, Int) -> Char
+auxil2 xs (a,b) = (xs!!a)!!b
+
 
 --Barrocas -TODO
 {-que receba um estado de um jogo e uma sequência de movimentos, e 
