@@ -9,7 +9,7 @@ module Labirintos (
 
 
 data EstadoJogo = EstadoJogo { labirinto  :: [[Char]],
-                               posInicial :: (Int,Int),
+                               posicao    :: (Int,Int),
                                chavesAdq  :: String
                              } deriving (Show)
 
@@ -29,7 +29,7 @@ lab5 = ["*******","* @ *","* ***B*","*a*S*F*","*** ***","*bA @*","*******"]
 labirinto (no estado inicial, o jogador encontra-se na posição inicial, 
 sem ter adquirido nenhuma chave).-}
 inicializa :: [String] -> EstadoJogo
-inicializa lab = EstadoJogo {labirinto = lab, posInicial = posicaoInicial lab, chavesAdq = ""}
+inicializa lab = EstadoJogo {labirinto = lab, posicao = posicaoInicial lab, chavesAdq = ""}
 
 --Barrocas -TODO
 posicaoInicial :: [String] -> (Int, Int)
@@ -38,7 +38,7 @@ posicaoInicial xs = undefined
 --Barrocas -done
 {-recebe um estado de um jogo e devolve a posição atual do jogador.-}
 jogador :: EstadoJogo -> (Int,Int)
-jogador = posInicial
+jogador = posicao
 
 --Bia -done
 {-recebe um estado de um jogo e devolve a lista das chaves já adquiridas 
