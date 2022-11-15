@@ -7,49 +7,52 @@ module Labirintos (
     move
 ) where
 
-{-
 
-lab4 = ["*******","*c B S*","***** *","*a*F* *",
-"*C*A* *","*b *","*******"]
-
-Defina um tipo de dados EstadoJogo que permita representar o jogo de um
-labirinto num dado momento. Neste jogo, o jogador tem como objetivo
-chegar da posição inicial à posição final. 
-Deverá ser possível obter informação de um objeto do tipo EstadoJogo 
-das seguintes Formas:
--}
 data EstadoJogo = EstadoJogo { labirinto  :: [[Char]],
                                posInicial :: (Int,Int),
                                chavesAdq  :: String
                              } deriving (Show)
 
---Bia 
-{-
-recebe um labirinto válido e devolve o estado inicial do jogo nesse 
-labirinto (no estado inicial, o jogador encontra-se na posição inicial, 
-sem ter adquirido nenhuma chave).
--}
-inicializa :: [String] -> EstadoJogo
-inicializa lab = undefined
+lab1 :: [String]
+lab1 = ["*****","*S*F*","* * *","* *","*****"]
+lab2 :: [String]
+lab2 = ["*****","*S a*","*A***","* F*","*****"]
+lab3 :: [String]
+lab3 = ["*****","*S @*","*****","*F @*","*****"]
+lab4 :: [String]
+lab4 = ["*******","*c B S*","***** *","*a*F* *","*C*A* *","*b *","*******"]
+lab5 :: [String]
+lab5 = ["*******","* @ *","* ***B*","*a*S*F*","*** ***","*bA @*","*******"]
 
---Barrocas
+--Bia -done
+{-recebe um labirinto válido e devolve o estado inicial do jogo nesse 
+labirinto (no estado inicial, o jogador encontra-se na posição inicial, 
+sem ter adquirido nenhuma chave).-}
+inicializa :: [String] -> EstadoJogo
+inicializa lab = EstadoJogo {labirinto = lab, posInicial = posicaoInicial lab, chavesAdq = ""}
+
+--Barrocas -TODO
+posicaoInicial :: [String] -> (Int, Int)
+posicaoInicial xs = undefined
+
+--Barrocas -done
 {-recebe um estado de um jogo e devolve a posição atual do jogador.-}
 jogador :: EstadoJogo -> (Int,Int)
-jogador ej = undefined
+jogador = posInicial
 
---Bia
+--Bia -done
 {-recebe um estado de um jogo e devolve a lista das chaves já adquiridas 
 pelo jogador. Cada chave é representada por um dos caracteres 'a','b','c'.-}
 chaves :: EstadoJogo -> String
-chaves ej = undefined
+chaves = chavesAdq
 
---Barrocas
+--Barrocas -TODO
 {-recebe um estado de um jogo e indica se o jogador já atingiu a 
 posição final.-}
 terminado :: EstadoJogo -> Bool
 terminado ej = undefined
 
---Barrocas
+--Barrocas -TODO
 {-que receba um estado de um jogo e uma sequência de movimentos, e 
 devolva o estado do jogo resultante. Considere quatro movimentos 
 possíveis: uma posição para cima (representado por 'u', ‘up’), uma 
