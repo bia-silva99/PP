@@ -81,12 +81,38 @@ auxil2 xs (a,b) = (xs!!a)!!b
 --Barrocas
 {-que receba um estado de um jogo e uma sequência de movimentos, e 
 devolva o estado do jogo resultante. Considere quatro movimentos 
-possíveis: uma posição para cima (representado por 'u', ‘up’), uma 
-posição para a esquerda (representado por 'l', ‘left’), uma posição
-para a direita (representado por 'r', ‘right’) e uma posição para baixo 
-(representado por 'd', ‘down’). Ao executar um movimento, deverá 
-inspeccionar a posição destino. Consoante esta posição, a sua 
-implementação deverá obedecer a certas regras, que passamos a explicar-}
+possíveis: uma posição para cima ('u' = ‘up’), uma posição para a 
+esquerda ('l' = ‘left’), uma posição para a direita ('r' = ‘right’)
+e uma posição para baixo ('d' = ‘down’). Ao executar um movimento,
+deverá inspeccionar a posição destino. Consoante esta posição, a sua 
+implementação deverá obedecer a certas regras, que passamos a explicar:
+    ->Se a posição destino for um espaço em branco, ' ', o jogador
+pode mover-se, passando a ocupar essa posição;
+    ->Se a posição destino for uma parede, '*', o jogador não pode 
+mover-se, pelo que o estado do jogo mantém-se igual.
+    ->Se a posição destino for a posição inicial, 'S', o jogador pode 
+mover-se, passando a ocupar essa posição. Ou seja, a posição inicial 
+funciona como um espaço em branco. No exemplo abaixo o jogador move-se 
+uma posição para baixo e uma posição para cima, voltando à posição 
+inicial.
+    ->Se a posição destino for a posição final, 'F', o jogador pode 
+mover-se, passando a ocupar essa posição. Ao atingir esta posição, a 
+função terminado deve retornar True.
+    ->Se a posição destino for uma chave, 'a','b','c', o jogador pode 
+mover-se, passando a ocupar essa posição. A chave é recolhida pelo 
+jogador: deve ser removida do labirinto e acrescentada à lista de chaves.
+    ->Se a posição destino for uma porta, 'A','B','C', e se a chave 
+respetivaa inda não tiver sido coleccionada, o jogador não pode mover-se, 
+pelo que o estado do jogo mantém-se igual. Ou seja, nestas situações a 
+porta funciona como uma parede.
+    ->Se a posição destino for uma porta, 'A','B','C', e se a chave 
+respetiva já tiver sido coleccionada, o jogador pode mover-se, passando 
+a ocupar essa posição. A porta é aberta, e deve ser removida do 
+labirinto. O jogador não perde a chave após abrir a porta.
+    ->Recorde que num labirinto válido existem exatamente zero ou dois 
+portais. Se a posição destino for um portal, '@', o jogador pode 
+mover-se, passando a ocupar a posição do outro portal no labirinto.
+-}
 move :: EstadoJogo -> String -> EstadoJogo
 move ej str = undefined
 
