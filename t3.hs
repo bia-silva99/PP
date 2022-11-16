@@ -22,14 +22,14 @@ data EstadoJogo = EstadoJogo { labirinto  :: [String],
 
 instance Show EstadoJogo where
     show :: EstadoJogo -> String
-    show (EstadoJogo labirinto posicao chavesAdq) = unlines labirinto 
+    show (EstadoJogo labirinto posicao chavesAdq) = unlines labirinto ++ "chaves: " ++ chavesAdq
         
 
 
 lab1 :: [String]
-lab1 = ["*****","*S*F*","* * *","* *","*****"]
+lab1 = ["*****","*S*F*","* * *","*   *","*****"]
 lab2 :: [String]
-lab2 = ["*****","*S a*","*A***","* F*","*****"]
+lab2 = ["*****","*S a*","*A***","*  F*","*****"]
 lab3 :: [String]
 lab3 = ["*****","*S @*","*****","*F @*","*****"]
 lab4 :: [String]
