@@ -1,5 +1,5 @@
 module Labirintos (
-    EstadoJogo(..),
+    EstadoJogo,
     inicializa,
     jogador,
     chaves,
@@ -15,14 +15,11 @@ chegar da posição inicial à posição final.
 Deverá ser possível obter informação de um objeto do tipo EstadoJogo 
 das seguintes Formas:
 -}
-data EstadoJogo = EstadoJogo { labirinto  :: [String],
-                               posicao    :: (Int,Int),
-                               chavesAdq  :: String
-                             } 
+
+data EstadoJogo = E([String],(Int,Int),String)
 
 instance Show EstadoJogo where
-    show :: EstadoJogo -> String
-    show (EstadoJogo labirinto posicao chavesAdq) = unlines labirinto ++ "chaves: " ++ chavesAdq
+    show (E(lab, posicao, chavesAdq))  = unlines lab ++ "chaves: " ++ chavesAdq
         
 
 
@@ -44,7 +41,7 @@ labirinto (no estado inicial, o jogador encontra-se na posição inicial,
 sem ter adquirido nenhuma chave).
 -}
 inicializa :: [String] -> EstadoJogo
-inicializa lab = EstadoJogo {labirinto = lab, posicao = posicaoInicial lab, chavesAdq = ""}
+inicializa lab = E(lab,posicaoInicial lab, [])
 
 posicaoInicial:: [String] -> (Int,Int)
 posicaoInicial n = (apanhaLinha n , (auxiliarColuna n) -1) 
@@ -75,24 +72,22 @@ auxiliarColuna (x:xs)
 
 {-recebe um estado de um jogo e devolve a posição atual do jogador.-}
 jogador :: EstadoJogo -> (Int,Int)
-jogador = posicao
-
+jogador (E(x,y,z)) = y
 
 {-recebe um estado de um jogo e devolve a lista das chaves já adquiridas 
 pelo jogador. Cada chave é representada por um dos caracteres 
 'a','b','c'.-}
 chaves :: EstadoJogo -> String
-chaves = chavesAdq 
+chaves (E(x,y,z)) = z
 
 lab :: EstadoJogo -> [String]
-lab = labirinto
-
+lab (E(x,y,z)) = x
 
 {-recebe um estado de um jogo e indica se o jogador já atingiu a 
 posição final.-}
 terminado :: EstadoJogo -> Bool
-terminado ej  | auxil2 (lab ej) (jogador ej) == 'F' = True
-              | auxil2 (lab ej) (jogador ej) /= 'F' = False
+terminado (E(x,y,z))    | auxil2 (x) (y) == 'F' = True
+                        | auxil2 (x) (y) /= 'F' = False
 
 
 --toma um par de coordenadas e devolve o valor no tabuleiro
@@ -133,10 +128,45 @@ labirinto. O jogador não perde a chave após abrir a porta.
     ->Recorde que num labirinto válido existem exatamente zero ou dois 
 portais. Se a posição destino for um portal, '@', o jogador pode 
 mover-se, passando a ocupar a posição do outro portal no labirinto.
--}
+
+Foi o stor que disse String?
+-} 
 move :: EstadoJogo -> String -> EstadoJogo
-move ej str = undefined
+move (E(lab,pos,keys)) [] = E(lab,pos,keys)
+move (E(lab,pos,keys)) (x:xs)
+    |   not (auxiliarMovimentoBool lab pos x) = move (E(lab,pos,keys)) xs
+    |   auxiliarMovimentoBool lab pos x = move (moverJogador(E(lab,pos,keys)) x) xs
 
 
+
+
+--Função que move realmente o jogador
+moverJogador:: EstadoJogo -> Char -> EstadoJogo
+moverJogador (E(lab,pos,keys)) (x) 
+    | x == 'u' = (E(lab,auxiliarPosicao (0,1) pos,keys)) 
+    | x == 'd' = (E(lab,auxiliarPosicao (0,-1) pos,keys))  
+    | x == 'l' = (E(lab,auxiliarPosicao (-1,0) pos,keys))  
+    | x == 'r' = (E(lab,auxiliarPosicao (1,0) pos,keys))  
+
+auxiliarPosicao:: (Int,Int) -> (Int,Int) -> (Int,Int) 
+auxiliarPosicao (a,b) (c,d) = (a+c,b+d) 
+
+
+--devolve a posicao no tab acima, abaixo, esq ou dir
+auxiliarMovimentoBool :: [String] -> (Int,Int) -> Char -> Bool
+auxiliarMovimentoBool lab (x,y) w   
+    | w == 'u' && auxil2 lab (x+0, y+1) /=  '*'     = True
+    | w == 'd' && auxil2 lab (0,-1) /=  '*'         = True
+    | w == 'l' && auxil2 lab (-1,0) /=  '*'         = True
+    | w == 'r' && auxil2 lab (1,0) /=  '*'          = True
+    | otherwise =  False
+
+
+-- mov 'u' is elem of vizinhos labirinto 
+
+--coordenadas de todos os vizinhos exceto se forem * 
+vizinhos :: [String] -> (Int, Int) -> [(Int, Int)]
+vizinhos xs (a,b) = [(x,y) | x <- [a], y <- [b+1, b-1], auxil2 xs (x,y) /= '*'] ++
+                    [(x,y) | y <- [b], x <- [a+1, a-1], auxil2 xs (x,y) /= '*']
 
 
