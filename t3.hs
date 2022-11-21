@@ -170,3 +170,9 @@ vizinhos xs (a,b) = [(x,y) | x <- [a], y <- [b+1, b-1], auxil2 xs (x,y) /= '*'] 
                     [(x,y) | y <- [b], x <- [a+1, a-1], auxil2 xs (x,y) /= '*']
 
 
+ghci> move ej1 "d"
+*** Exception: Prelude.!!: negative index
+CallStack (from HasCallStack):
+  error, called at libraries\base\GHC\List.hs:1371:12 in base:GHC.List
+  negIndex, called at libraries\base\GHC\List.hs:1375:17 in base:GHC.List
+  !!, called at t3.hs:101:26 in main:Labirintos
