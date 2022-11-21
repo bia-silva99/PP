@@ -46,8 +46,29 @@ sem ter adquirido nenhuma chave).
 inicializa :: [String] -> EstadoJogo
 inicializa lab = EstadoJogo {labirinto = lab, posicao = posicaoInicial lab, chavesAdq = ""}
 
-posicaoInicial :: [String] -> (Int,Int)
-posicaoInicial xs = undefined
+posicaoInicial:: [String] -> (Int,Int)
+posicaoInicial n = (apanhaLinha n , (auxiliarColuna n) -1) 
+
+apanhaLinha:: [String] -> Int
+apanhaLinha n = head([a | (a,b) <- (zip [0,1..] n), estaNaString b 'S' == True])
+
+apanhaCoord:: (Num a) => String -> a
+apanhaCoord [] = 0
+apanhaCoord (x:xs) 
+   | x == 'S'      = 1
+   | otherwise     = 1 + apanhaCoord (xs)  
+
+estaNaString:: String -> Char -> Bool
+estaNaString [] _ = False
+estaNaString (x:xs) c
+   | x == c      = True
+   | otherwise     = estaNaString (xs) c
+
+auxiliarColuna:: (Num a) => [String] -> a
+auxiliarColuna [] = 0
+auxiliarColuna (x:xs)  
+   | estaNaString (x) 'S' == True   = apanhaCoord (x)
+   | otherwise                      = auxiliarColuna (xs)
 
 
 
