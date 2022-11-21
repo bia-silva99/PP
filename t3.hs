@@ -1,11 +1,12 @@
 module Labirintos (
-    EstadoJogo,
+    EstadoJogo(..),
     inicializa,
     jogador,
     chaves,
     terminado,
     move
 ) where
+
 
 
 {-
@@ -16,10 +17,14 @@ Deverá ser possível obter informação de um objeto do tipo EstadoJogo
 das seguintes Formas:
 -}
 
-data EstadoJogo = E([String],(Int,Int),String)
+
+newtype EstadoJogo = E([String],(Int,Int),String)
+
 
 instance Show EstadoJogo where
+    show :: EstadoJogo -> String
     show (E(lab, posicao, chavesAdq))  = unlines lab ++ "chaves: " ++ chavesAdq
+         
         
 
 
@@ -41,19 +46,19 @@ labirinto (no estado inicial, o jogador encontra-se na posição inicial,
 sem ter adquirido nenhuma chave).
 -}
 inicializa :: [String] -> EstadoJogo
-inicializa lab = E(lab,posicaoInicial lab, [])
+inicializa lab = E (lab,  posicaoInicial lab, "")
 
 posicaoInicial:: [String] -> (Int,Int)
-posicaoInicial n = (apanhaLinha n , (auxiliarColuna n) -1) 
+posicaoInicial n = (apanhaLinha n , auxiliarColuna n -1) 
 
 apanhaLinha:: [String] -> Int
-apanhaLinha n = head([a | (a,b) <- (zip [0,1..] n), estaNaString b 'S' == True])
+apanhaLinha n = head([a | (a,b) <- zip [0,1..] n, estaNaString b 'S'])
 
 apanhaCoord:: (Num a) => String -> a
 apanhaCoord [] = 0
 apanhaCoord (x:xs) 
    | x == 'S'      = 1
-   | otherwise     = 1 + apanhaCoord (xs)  
+   | otherwise     = 1 + apanhaCoord xs
 
 estaNaString:: String -> Char -> Bool
 estaNaString [] _ = False
@@ -64,8 +69,8 @@ estaNaString (x:xs) c
 auxiliarColuna:: (Num a) => [String] -> a
 auxiliarColuna [] = 0
 auxiliarColuna (x:xs)  
-   | estaNaString (x) 'S' == True   = apanhaCoord (x)
-   | otherwise                      = auxiliarColuna (xs)
+   | estaNaString x 'S'  = apanhaCoord x
+   | otherwise           = auxiliarColuna xs
 
 
 
@@ -78,16 +83,17 @@ jogador (E(x,y,z)) = y
 pelo jogador. Cada chave é representada por um dos caracteres 
 'a','b','c'.-}
 chaves :: EstadoJogo -> String
-chaves (E(x,y,z)) = z
+chaves (E(x,y,z)) = z 
 
 lab :: EstadoJogo -> [String]
 lab (E(x,y,z)) = x
 
+
 {-recebe um estado de um jogo e indica se o jogador já atingiu a 
 posição final.-}
 terminado :: EstadoJogo -> Bool
-terminado (E(x,y,z))    | auxil2 (x) (y) == 'F' = True
-                        | auxil2 (x) (y) /= 'F' = False
+terminado ej  | auxil2 (lab ej) (jogador ej) == 'F' = True
+              | auxil2 (lab ej) (jogador ej) /= 'F' = False
 
 
 --toma um par de coordenadas e devolve o valor no tabuleiro
@@ -131,22 +137,22 @@ mover-se, passando a ocupar a posição do outro portal no labirinto.
 
 Foi o stor que disse String?
 -} 
+
 move :: EstadoJogo -> String -> EstadoJogo
-move (E(lab,pos,keys)) [] = E(lab,pos,keys)
+move e [] = e
 move (E(lab,pos,keys)) (x:xs)
-    |   not (auxiliarMovimentoBool lab pos x) = move (E(lab,pos,keys)) xs
-    |   auxiliarMovimentoBool lab pos x = move (moverJogador(E(lab,pos,keys)) x) xs
-
-
+    |  (auxiliarMovimentoBool lab pos x) == False   = move (E(lab,pos,keys)) xs
+    |  (auxiliarMovimentoBool lab pos x) == True    = move (moverJogador(E(lab,pos,keys)) x) xs
+    
 
 
 --Função que move realmente o jogador
 moverJogador:: EstadoJogo -> Char -> EstadoJogo
-moverJogador (E(lab,pos,keys)) (x) 
-    | x == 'u' = (E(lab,auxiliarPosicao (0,1) pos,keys)) 
-    | x == 'd' = (E(lab,auxiliarPosicao (0,-1) pos,keys))  
-    | x == 'l' = (E(lab,auxiliarPosicao (-1,0) pos,keys))  
-    | x == 'r' = (E(lab,auxiliarPosicao (1,0) pos,keys))  
+moverJogador (E(lab,pos,keys)) x
+    | x == 'u' = E(lab,auxiliarPosicao (0,-1) pos,keys)
+    | x == 'd' = E(lab,auxiliarPosicao (0,1) pos,keys)  
+    | x == 'l' = E(lab,auxiliarPosicao (-1,0) pos,keys)  
+    | x == 'r' = E(lab,auxiliarPosicao (1,0) pos,keys) 
 
 auxiliarPosicao:: (Int,Int) -> (Int,Int) -> (Int,Int) 
 auxiliarPosicao (a,b) (c,d) = (a+c,b+d) 
@@ -155,24 +161,8 @@ auxiliarPosicao (a,b) (c,d) = (a+c,b+d)
 --devolve a posicao no tab acima, abaixo, esq ou dir
 auxiliarMovimentoBool :: [String] -> (Int,Int) -> Char -> Bool
 auxiliarMovimentoBool lab (x,y) w   
-    | w == 'u' && auxil2 lab (x+0, y+1) /=  '*'     = True
-    | w == 'd' && auxil2 lab (0,-1) /=  '*'         = True
-    | w == 'l' && auxil2 lab (-1,0) /=  '*'         = True
-    | w == 'r' && auxil2 lab (1,0) /=  '*'          = True
+    | w == 'u' && auxil2 lab (x+0, y+1) /=  '*'  = True
+    | w == 'd' && auxil2 lab (x+0, y-1) /=  '*'  = True
+    | w == 'l' && auxil2 lab (x-1, y+0) /=  '*'  = True
+    | w == 'r' && auxil2 lab (x+1, y+0) /=  '*'  = True
     | otherwise =  False
-
-
--- mov 'u' is elem of vizinhos labirinto 
-
---coordenadas de todos os vizinhos exceto se forem * 
-vizinhos :: [String] -> (Int, Int) -> [(Int, Int)]
-vizinhos xs (a,b) = [(x,y) | x <- [a], y <- [b+1, b-1], auxil2 xs (x,y) /= '*'] ++
-                    [(x,y) | y <- [b], x <- [a+1, a-1], auxil2 xs (x,y) /= '*']
-
-
-ghci> move ej1 "d"
-*** Exception: Prelude.!!: negative index
-CallStack (from HasCallStack):
-  error, called at libraries\base\GHC\List.hs:1371:12 in base:GHC.List
-  negIndex, called at libraries\base\GHC\List.hs:1375:17 in base:GHC.List
-  !!, called at t3.hs:101:26 in main:Labirintos
