@@ -135,7 +135,13 @@ portais. Se a posição destino for um portal, '@', o jogador pode
 mover-se, passando a ocupar a posição do outro portal no labirinto.
 -}
 move :: EstadoJogo -> String -> EstadoJogo
-move ej str = undefined
+move ej [] = ej
+move ej (x:xs) | (x == 'u')  =  --meter 'S' na pos acima e eliminar da pos atual
+               | (x == 'd') =  --meter 'S' na pos abaixo e eliminar da pos atual
+               | (x == 'l') =  --meter 'S' na pos a esquerda e eliminar da pos atual
+               | (x == 'r') =  --meter 'S' na pos a dir e eliminar da pos atual
+                
+
 
 
 
